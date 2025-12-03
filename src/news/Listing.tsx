@@ -3,20 +3,20 @@ import { Link, NavLink } from "react-router-dom";
 import Pagination from "../components/Pagination";
 import { confirmAction, showError, showSuccess } from "../utils/toast";
 import { formatDMY } from "../utils/common";
-import API_URL, { STAFF_TITLE } from "../utils/config";
+import API_URL, { USER_TITLE } from "../utils/config";
 import CustomLoading from "../components/CustomLoading";
 
-interface Staff {
-  adminID: number;
-  name: string;
-  official_email: string;
-  mobile: string;
+interface Blog {
+  blogid: number;
+  title: string;
+  author: string;
+  likes: string;
   created_at: string;
 }
 
 interface FetchResponse {
   data: {
-    responseData: Staff[];
+    responseData: Blog[];
     page: number;
     totalPages: number;
     total: number;
@@ -24,7 +24,7 @@ interface FetchResponse {
 }
 
 const Listing: React.FC = () => {
-  const [results, setResults] = useState<Staff[]>([]);
+  const [results, setResults] = useState<Blog[]>([]);
   const [page, setPage] = useState<number>(1);
   const [limit] = useState<number>(10);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -35,7 +35,7 @@ const Listing: React.FC = () => {
   const [searchEmail, setSearchEmail] = useState<string>("");
   const [searchMobile, setSearchMobile] = useState<string>("");
 
-  const fetchUsers = async (pageNumber = 1) => {
+  const fetchresults = async (pageNumber = 1) => {
     setLoading(true);
     try {
       const queryParams = new URLSearchParams({
@@ -47,7 +47,7 @@ const Listing: React.FC = () => {
       if (searchEmail) queryParams.append("email", searchEmail);
       if (searchMobile) queryParams.append("mobile", searchMobile);
 
-      const res = await fetch(`${API_URL}staffs?${queryParams.toString()}`);
+      const res = await fetch(`${API_URL}blogs?${queryParams.toString()}`);
       const data: FetchResponse = await res.json();
       console.log("data", data.data)
 
@@ -56,7 +56,7 @@ const Listing: React.FC = () => {
       setTotalPages(data.data.totalPages || 1);
       setTotalEntries(data.data.total || 0);
     } catch (err) {
-      console.error("Error loading users:", err);
+      console.error("Error loading blogs:", err);
       setResults([]);
     } finally {
       setLoading(false);
@@ -64,7 +64,7 @@ const Listing: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchUsers(page);
+    fetchresults(page);
   }, [page, limit]);
 
   const handlePageChange = (newPage: number) => {
@@ -82,11 +82,11 @@ const Listing: React.FC = () => {
     if (!isConfirmed) return;
 
     try {
-      const res = await fetch(`${API_URL}staffs/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_URL}blogs/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete user");
 
       await showSuccess("User has been deleted successfully.");
-      fetchUsers(page);
+      fetchresults(page);
     } catch (err: any) {
       await showError(err.message || "Failed to delete user.");
     }
@@ -94,7 +94,7 @@ const Listing: React.FC = () => {
 
   const handleSearch = () => {
     setPage(1);
-    fetchUsers(1);
+    fetchresults(1);
   };
 
   const handleReset = () => {
@@ -102,20 +102,20 @@ const Listing: React.FC = () => {
     setSearchEmail("");
     setSearchMobile("");
     setPage(1);
-    fetchUsers(1);
+    fetchresults(1);
   };
 
   useEffect(() => {
-    fetchUsers(1);
+    fetchresults(1);
   }, [searchName, searchEmail, searchMobile]);
 
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4 className="fw-semibold">{STAFF_TITLE}s</h4>
+        <h4 className="fw-semibold">{USER_TITLE}s</h4>
         <div>
-          <NavLink to="/staffs/create" className="btn btn-primary btn-sm me-2">
-            <i className="fa-solid fa-plus"></i> Add New {STAFF_TITLE}
+          <NavLink to="/blogs/create" className="btn btn-primary btn-sm me-2">
+            <i className="fa-solid fa-plus"></i> Add New {USER_TITLE}
           </NavLink>
         </div>
       </div>
@@ -182,7 +182,7 @@ const Listing: React.FC = () => {
 
       <div className="card p-3">
         {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center' }}><CustomLoading /> </div>
+          <div><CustomLoading /> </div>
         ) : (
           <div className="table-responsive">
             <table className="table table-bordered table-hover align-middle">
@@ -190,8 +190,8 @@ const Listing: React.FC = () => {
                 <tr>
                   <th>ID</th>
                   <th>Name</th>
-                  <th>Email</th>
-                  <th>Mobile No.</th>
+                  <th>Author</th>
+                  <th>Likes</th>
                   <th>Create Date</th>
                   <th>Actions</th>
                 </tr>
@@ -205,22 +205,22 @@ const Listing: React.FC = () => {
                   </tr>
                 ) : (
                   results.map((result) => (
-                    <tr key={result.adminID}>
-                      <td>{result.adminID}</td>
-                      <td>{result.name}</td>
-                      <td>{result.official_email}</td>
-                      <td>{result.mobile}</td>
+                    <tr key={result.blogid}>
+                      <td>{result.blogid}</td>
+                      <td>{result.title}</td>
+                      <td>{result.author}</td>
+                      <td>{result.likes}</td>
                       <td>{formatDMY(result.created_at)}</td>
                       <td className="text-right">
                         <Link
-                          to={`/staffs/edit/${result.adminID}`}
+                          to={`/blogs/edit/${result.blogid}`}
                           className="text-warning me-3"
                         >
                           Edit
                         </Link>
                         <button
                           className="btn btn-link text-danger p-0"
-                          onClick={() => handleDelete(result.adminID)}
+                          onClick={() => handleDelete(result.blogid)}
                         >
                           Delete
                         </button>

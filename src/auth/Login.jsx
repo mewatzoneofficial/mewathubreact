@@ -15,7 +15,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}auth/login`, {
+      const res = await fetch(`${API_URL}auth/admin-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -23,9 +23,10 @@ const Login = () => {
 
       const result = await res.json();
       if (!res.ok) throw new Error(result.message || "Login failed");
+      console.log('result', result)
 
       await showSuccess("Logged in successfully.");
-      localStorage.setItem("adminUser", JSON.stringify(result.data.user));
+      localStorage.setItem("adminUser", JSON.stringify(result.data));
       localStorage.setItem("adminToken", result.data.token);
       navigate("/dashboard");
     } catch (err) {
@@ -33,11 +34,6 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleRegister = (e) => {
-    e.preventDefault(); // if inside a form
-    navigate("/register"); // redirect to /register
   };
 
   return (
@@ -81,9 +77,6 @@ const Login = () => {
           <button type="submit" className="login-btn" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </button>
-
-          <button type="submit" className="register-btn" onClick={handleRegister}>Register</button>
-
         </form>
       </div>
     </div>

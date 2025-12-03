@@ -8,6 +8,7 @@ import {
   Tooltip,
 } from "recharts";
 import API_URL from "../utils/config";
+import CustomLoading from "../components/CustomLoading";
 
 const UserPieChart = () => {
   const COLORS = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#0ea5e9"];
@@ -44,7 +45,7 @@ const data = useMemo(() => [
   { name: "Today Block Request", value: userStats.total_blocked_faculty_users || 0 },
 ], [userStats]);
 
-  if (loading) return <div>Loading chart...</div>;
+  if (loading) return <div><CustomLoading/></div>;
   if (error) return <div className="text-danger">Error: {error}</div>;
 
   return (

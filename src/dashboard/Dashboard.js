@@ -1,6 +1,6 @@
 import RecentUser from "./RecentUser";
 import StatCard from "../components/StatCard";
-import UserChart from "./UserChart";
+import EmployerJobChart from "./EmployerJobChart";
 import JobPieChart from "./JobPieChart";
 import UserPieChart from "./UserPieChart";
 
@@ -17,7 +17,7 @@ function Dashboard() {
 
       {/* Charts Section */}
       <div className="row">
-          <UserChart />
+          <EmployerJobChart />
       </div>
 
       {/* Charts Section */}

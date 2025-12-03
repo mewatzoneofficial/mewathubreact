@@ -3,20 +3,20 @@ import { Link, NavLink } from "react-router-dom";
 import Pagination from "../components/Pagination";
 import { confirmAction, showError, showSuccess } from "../utils/toast";
 import { formatDMY } from "../utils/common";
-import API_URL, { STAFF_TITLE } from "../utils/config";
+import API_URL, { USER_TITLE } from "../utils/config";
 import CustomLoading from "../components/CustomLoading";
 
-interface Staff {
-  adminID: number;
+interface User {
+  faculityID: number;
   name: string;
-  official_email: string;
+  email: string;
   mobile: string;
   created_at: string;
 }
 
 interface FetchResponse {
   data: {
-    responseData: Staff[];
+    responseData: User[];
     page: number;
     totalPages: number;
     total: number;
@@ -24,7 +24,7 @@ interface FetchResponse {
 }
 
 const Listing: React.FC = () => {
-  const [results, setResults] = useState<Staff[]>([]);
+  const [results, setResults] = useState<User[]>([]);
   const [page, setPage] = useState<number>(1);
   const [limit] = useState<number>(10);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -47,7 +47,7 @@ const Listing: React.FC = () => {
       if (searchEmail) queryParams.append("email", searchEmail);
       if (searchMobile) queryParams.append("mobile", searchMobile);
 
-      const res = await fetch(`${API_URL}staffs?${queryParams.toString()}`);
+      const res = await fetch(`${API_URL}users?${queryParams.toString()}`);
       const data: FetchResponse = await res.json();
       console.log("data", data.data)
 
@@ -82,7 +82,7 @@ const Listing: React.FC = () => {
     if (!isConfirmed) return;
 
     try {
-      const res = await fetch(`${API_URL}staffs/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_URL}users/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete user");
 
       await showSuccess("User has been deleted successfully.");
@@ -112,10 +112,10 @@ const Listing: React.FC = () => {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4 className="fw-semibold">{STAFF_TITLE}s</h4>
+        <h4 className="fw-semibold">{USER_TITLE}s</h4>
         <div>
-          <NavLink to="/staffs/create" className="btn btn-primary btn-sm me-2">
-            <i className="fa-solid fa-plus"></i> Add New {STAFF_TITLE}
+          <NavLink to="/users/create" className="btn btn-primary btn-sm me-2">
+            <i className="fa-solid fa-plus"></i> Add New {USER_TITLE}
           </NavLink>
         </div>
       </div>
@@ -182,7 +182,7 @@ const Listing: React.FC = () => {
 
       <div className="card p-3">
         {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center' }}><CustomLoading /> </div>
+          <div><CustomLoading /> </div>
         ) : (
           <div className="table-responsive">
             <table className="table table-bordered table-hover align-middle">
@@ -205,22 +205,22 @@ const Listing: React.FC = () => {
                   </tr>
                 ) : (
                   results.map((result) => (
-                    <tr key={result.adminID}>
-                      <td>{result.adminID}</td>
+                    <tr key={result.faculityID}>
+                      <td>{result.faculityID}</td>
                       <td>{result.name}</td>
-                      <td>{result.official_email}</td>
+                      <td>{result.email}</td>
                       <td>{result.mobile}</td>
                       <td>{formatDMY(result.created_at)}</td>
                       <td className="text-right">
                         <Link
-                          to={`/staffs/edit/${result.adminID}`}
+                          to={`/users/edit/${result.faculityID}`}
                           className="text-warning me-3"
                         >
                           Edit
                         </Link>
                         <button
                           className="btn btn-link text-danger p-0"
-                          onClick={() => handleDelete(result.adminID)}
+                          onClick={() => handleDelete(result.faculityID)}
                         >
                           Delete
                         </button>

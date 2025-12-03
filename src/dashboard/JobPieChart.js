@@ -8,6 +8,7 @@ import {
   Tooltip,
 } from "recharts";
 import API_URL from "../utils/config";
+import CustomLoading from "../components/CustomLoading";
 
 const JobPieChart = () => {
   const COLORS = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#0ea5e9"];
@@ -18,11 +19,12 @@ const JobPieChart = () => {
   const fetchJobs = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}dashboard/job-chart`);
-      if (!res.ok) throw new Error("Failed to fetch job stats");
+      const response = await fetch(`${API_URL}dashboard/job-chart`);
+      if (!response.ok) throw new Error("Failed to fetch job stats");
 
-      const result = await res.json();
-      setJobs(result.data || {});
+      const jobs = await response.json();
+      console.log("result, result", jobs.data);
+      setJobs(jobs.data || {});
     } catch (err) {
       console.error(err);
     }
@@ -43,7 +45,7 @@ const JobPieChart = () => {
     ]);
   }, [jobs]);
 
-  if (loading) return <div>Loading chart...</div>;
+  if (loading) return <div><CustomLoading/></div>;
 
   return (
     <div className="card shadow-sm border-0 rounded-4 p-3 mb-4">

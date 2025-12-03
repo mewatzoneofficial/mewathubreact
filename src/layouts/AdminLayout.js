@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Navbar from "../components/Navbar";
 import Topbar from "../components/Topbar";
-import Footer from "../components/Footer";
+import Footer from "../components/Footer.tsx";
 import { Outlet } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
@@ -26,7 +26,7 @@ const AdminLayout = () => {
         <div className="container-fluid mt-4">
           <Outlet />
         </div>
-        <Footer />
+        <Footer/>
       </div>
     </div>
   );

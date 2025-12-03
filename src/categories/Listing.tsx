@@ -3,20 +3,18 @@ import { Link, NavLink } from "react-router-dom";
 import Pagination from "../components/Pagination";
 import { confirmAction, showError, showSuccess } from "../utils/toast";
 import { formatDMY } from "../utils/common";
-import API_URL, { STAFF_TITLE } from "../utils/config";
+import API_URL, { CATEGORY_TITLE } from "../utils/config";
 import CustomLoading from "../components/CustomLoading";
 
-interface Staff {
-  adminID: number;
+interface Category {
+  id: number;
   name: string;
-  official_email: string;
-  mobile: string;
   created_at: string;
 }
 
 interface FetchResponse {
   data: {
-    responseData: Staff[];
+    responseData: Category[];
     page: number;
     totalPages: number;
     total: number;
@@ -24,7 +22,7 @@ interface FetchResponse {
 }
 
 const Listing: React.FC = () => {
-  const [results, setResults] = useState<Staff[]>([]);
+  const [results, setResults] = useState<Category[]>([]);
   const [page, setPage] = useState<number>(1);
   const [limit] = useState<number>(10);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -32,10 +30,7 @@ const Listing: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const [searchName, setSearchName] = useState<string>("");
-  const [searchEmail, setSearchEmail] = useState<string>("");
-  const [searchMobile, setSearchMobile] = useState<string>("");
-
-  const fetchUsers = async (pageNumber = 1) => {
+  const fetchRecords = async (pageNumber = 1) => {
     setLoading(true);
     try {
       const queryParams = new URLSearchParams({
@@ -44,10 +39,8 @@ const Listing: React.FC = () => {
       });
 
       if (searchName) queryParams.append("name", searchName);
-      if (searchEmail) queryParams.append("email", searchEmail);
-      if (searchMobile) queryParams.append("mobile", searchMobile);
 
-      const res = await fetch(`${API_URL}staffs?${queryParams.toString()}`);
+      const res = await fetch(`${API_URL}categories?${queryParams.toString()}`);
       const data: FetchResponse = await res.json();
       console.log("data", data.data)
 
@@ -64,7 +57,7 @@ const Listing: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchUsers(page);
+    fetchRecords(page);
   }, [page, limit]);
 
   const handlePageChange = (newPage: number) => {
@@ -82,11 +75,11 @@ const Listing: React.FC = () => {
     if (!isConfirmed) return;
 
     try {
-      const res = await fetch(`${API_URL}staffs/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_URL}categories/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete user");
 
       await showSuccess("User has been deleted successfully.");
-      fetchUsers(page);
+      fetchRecords(page);
     } catch (err: any) {
       await showError(err.message || "Failed to delete user.");
     }
@@ -94,28 +87,26 @@ const Listing: React.FC = () => {
 
   const handleSearch = () => {
     setPage(1);
-    fetchUsers(1);
+    fetchRecords(1);
   };
 
   const handleReset = () => {
     setSearchName("");
-    setSearchEmail("");
-    setSearchMobile("");
     setPage(1);
-    fetchUsers(1);
+    fetchRecords(1);
   };
 
   useEffect(() => {
-    fetchUsers(1);
-  }, [searchName, searchEmail, searchMobile]);
+    fetchRecords(1);
+  }, [searchName]);
 
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4 className="fw-semibold">{STAFF_TITLE}s</h4>
+        <h4 className="fw-semibold">{CATEGORY_TITLE}</h4>
         <div>
-          <NavLink to="/staffs/create" className="btn btn-primary btn-sm me-2">
-            <i className="fa-solid fa-plus"></i> Add New {STAFF_TITLE}
+          <NavLink to="/categories/create" className="btn btn-primary btn-sm me-2">
+            <i className="fa-solid fa-plus"></i> Add New {CATEGORY_TITLE}
           </NavLink>
         </div>
       </div>
@@ -132,30 +123,6 @@ const Listing: React.FC = () => {
                 onChange={(e) => setSearchName(e.target.value)}
                 className="form-control"
                 placeholder="Search Name"
-              />
-            </div>
-
-            <div className="col-md-4">
-              <label className="form-label fw-medium">Email</label>
-              <input
-                type="text"
-                name="email"
-                value={searchEmail}
-                onChange={(e) => setSearchEmail(e.target.value)}
-                className="form-control"
-                placeholder="Search Email"
-              />
-            </div>
-
-            <div className="col-md-4">
-              <label className="form-label fw-medium">Mobile</label>
-              <input
-                type="text"
-                name="mobile"
-                value={searchMobile}
-                onChange={(e) => setSearchMobile(e.target.value)}
-                className="form-control"
-                placeholder="Search Mobile"
               />
             </div>
           </div>
@@ -190,8 +157,6 @@ const Listing: React.FC = () => {
                 <tr>
                   <th>ID</th>
                   <th>Name</th>
-                  <th>Email</th>
-                  <th>Mobile No.</th>
                   <th>Create Date</th>
                   <th>Actions</th>
                 </tr>
@@ -205,22 +170,20 @@ const Listing: React.FC = () => {
                   </tr>
                 ) : (
                   results.map((result) => (
-                    <tr key={result.adminID}>
-                      <td>{result.adminID}</td>
+                    <tr key={result.id}>
+                      <td>{result.id}</td>
                       <td>{result.name}</td>
-                      <td>{result.official_email}</td>
-                      <td>{result.mobile}</td>
                       <td>{formatDMY(result.created_at)}</td>
                       <td className="text-right">
                         <Link
-                          to={`/staffs/edit/${result.adminID}`}
+                          to={`/categories/edit/${result.id}`}
                           className="text-warning me-3"
                         >
                           Edit
                         </Link>
                         <button
                           className="btn btn-link text-danger p-0"
-                          onClick={() => handleDelete(result.adminID)}
+                          onClick={() => handleDelete(result.id)}
                         >
                           Delete
                         </button>
