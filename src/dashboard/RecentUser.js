@@ -12,12 +12,12 @@ const RecentUser = () => {
     try {
       const queryParams = new URLSearchParams({
         page: 1,
-        limit:5,
+        limit:10,
       });
       const res = await fetch(`${API_URL}users?${queryParams.toString()}`);
       if (!res.ok) throw new Error("Failed to fetch users");
       const data = await res.json();
-      setUsers(Array.isArray(data.data.results) ? data.data.results : []);
+      setUsers(Array.isArray(data.data.responseData) ? data.data.responseData : []);
     } catch (err) {
       console.error(err);
     }

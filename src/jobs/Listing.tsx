@@ -8,9 +8,9 @@ import CustomLoading from "../components/CustomLoading";
 
 interface Job {
   jobID: number;
-  name: string;
-  official_email: string;
-  mobile: string;
+  job_title: string;
+  salary_unit: string;
+  job_level: string;
   created_at: string;
 }
 
@@ -49,7 +49,7 @@ const Listing: React.FC = () => {
 
       const res = await fetch(`${API_URL}jobs?${queryParams.toString()}`);
       const data: FetchResponse = await res.json();
-      console.log("data", data.data)
+      console.log("data", data.data.responseData)
 
       setResults(Array.isArray(data.data.responseData) ? data.data.responseData : []);
       setPage(data.data.page || 1);
@@ -112,7 +112,7 @@ const Listing: React.FC = () => {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4 className="fw-semibold">{JOB_TITLE}s</h4>
+        <h4 className="fw-semibold">{JOB_TITLE}</h4>
         <div>
           <NavLink to="/jobs/create" className="btn btn-primary btn-sm me-2">
             <i className="fa-solid fa-plus"></i> Add New {JOB_TITLE}
@@ -132,30 +132,6 @@ const Listing: React.FC = () => {
                 onChange={(e) => setSearchName(e.target.value)}
                 className="form-control"
                 placeholder="Search Name"
-              />
-            </div>
-
-            <div className="col-md-4">
-              <label className="form-label fw-medium">Email</label>
-              <input
-                type="text"
-                name="email"
-                value={searchEmail}
-                onChange={(e) => setSearchEmail(e.target.value)}
-                className="form-control"
-                placeholder="Search Email"
-              />
-            </div>
-
-            <div className="col-md-4">
-              <label className="form-label fw-medium">Mobile</label>
-              <input
-                type="text"
-                name="mobile"
-                value={searchMobile}
-                onChange={(e) => setSearchMobile(e.target.value)}
-                className="form-control"
-                placeholder="Search Mobile"
               />
             </div>
           </div>
@@ -189,9 +165,9 @@ const Listing: React.FC = () => {
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Mobile No.</th>
+                  <th>Job Title</th>
+                  <th>Salary Unit</th>
+                  <th>Job Level</th>
                   <th>Create Date</th>
                   <th>Actions</th>
                 </tr>
@@ -207,9 +183,9 @@ const Listing: React.FC = () => {
                   results.map((result) => (
                     <tr key={result.jobID}>
                       <td>{result.jobID}</td>
-                      <td>{result.name}</td>
-                      <td>{result.official_email}</td>
-                      <td>{result.mobile}</td>
+                      <td>{result.job_title}</td>
+                      <td>{result.salary_unit}</td>
+                      <td>{result.job_level}</td>
                       <td>{formatDMY(result.created_at)}</td>
                       <td className="text-right">
                         <Link

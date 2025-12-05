@@ -22,10 +22,8 @@ const UserPieChart = () => {
     try {
       const res = await fetch(`${API_URL}dashboard/user-chart`);
       if (!res.ok) throw new Error("Failed to fetch user stats");
-
       const result = await res.json();
-      console.log("API result:", result.data); // Debug API response
-      setUserStats(result.data || {});
+      setUserStats(result.data.results || {});
     } catch (err) {
       console.error(err);
       setError(err.message);

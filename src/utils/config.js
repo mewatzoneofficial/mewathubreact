@@ -2,7 +2,6 @@
 const API_URL = "http://localhost:8080/";
 // const API_URL = "https://nodeapp-production-9ead.up.railway.app/";
 export default API_URL;
-
 export const ITEMS_PER_PAGE = 10;
 
 export const STAFF_TITLE = "Staff";
@@ -13,3 +12,26 @@ export const STATE_TITLE = "State";
 export const CITY_TITLE = "City";
 export const CATEGORY_TITLE = "Category";
 export const SUBCATEGORY_TITLE = "Sub Category";
+export const BLOG_TITLE = "BLog";
+export const NEWS_TITLE = "News";
+export const SETTING_TITLE = "Setting";
+export const SKILL_TITLE = "Skill";
+export const QUALIFICATION_TITLE = "Qualification";
+export const VIEWLOG_TITLE = "View Log";
+export const ROLE_TITLE = "Role";
+export const DESIGNATION_TITLE = "Designation";
+export const FEED_TITLE = "Feed";
+export const TAG_TITLE = "Tag";
+export const STICKYNOTE_TITLE = "Sticky Note";
+export const CHAT_TITLE = "Chat";
+export const ORDER_TITLE = "Order";
+export const ADMIN_TITLE = "Admin";
+export const LOGIN_TITLE = "Login";
+export const NOTFOUND_TITLE = "Not Found";
+export const DASHBOARD_TITLE = "Dashboard";
+export const BANNER_TITLE = "Banner";
+export const TESTIMONIAL_TITLE = "Testimonial";
+export const CAREERAPPLICATION_TITLE = "Career Application";
+export const CAREERJOB_TITLE = "Career Job";  
+export const PACKAGE_TITLE = "Package";
+export const MODULE_TITLE = "Admin Module";

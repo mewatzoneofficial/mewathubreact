@@ -7,6 +7,7 @@ import Topbar from "../components/Topbar";
 import Footer from "../components/Footer.tsx";
 import { Outlet } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import logo from '../assets/img/logo.png';
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -16,7 +17,10 @@ const AdminLayout = () => {
   return (
     <div className="dashboard-wrapper">
       <div className={`sidebar ${sidebarOpen ? "show" : ""}`} id="sidebar">
-        <div className="brand">R & D</div>
+        <div className="brand">
+          <img src={logo} alt="App Logo"
+                    style={{ width: "130px", objectFit: "contain" }} />
+        </div>
         <Navbar />
       </div>
 

@@ -21,9 +21,7 @@ const JobPieChart = () => {
     try {
       const response = await fetch(`${API_URL}dashboard/job-chart`);
       if (!response.ok) throw new Error("Failed to fetch job stats");
-
       const jobs = await response.json();
-      console.log("result, result", jobs.data);
       setJobs(jobs.data || {});
     } catch (err) {
       console.error(err);

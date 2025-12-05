@@ -3,10 +3,10 @@ import { Link, NavLink } from "react-router-dom";
 import Pagination from "../components/Pagination";
 import { confirmAction, showError, showSuccess } from "../utils/toast";
 import { formatDMY } from "../utils/common";
-import API_URL, { USER_TITLE } from "../utils/config";
+import API_URL, { NEWS_TITLE } from "../utils/config";
 import CustomLoading from "../components/CustomLoading";
 
-interface Blog {
+interface News {
   blogid: number;
   title: string;
   author: string;
@@ -16,7 +16,7 @@ interface Blog {
 
 interface FetchResponse {
   data: {
-    responseData: Blog[];
+    responseData: News[];
     page: number;
     totalPages: number;
     total: number;
@@ -24,7 +24,7 @@ interface FetchResponse {
 }
 
 const Listing: React.FC = () => {
-  const [results, setResults] = useState<Blog[]>([]);
+  const [results, setResults] = useState<News[]>([]);
   const [page, setPage] = useState<number>(1);
   const [limit] = useState<number>(10);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -47,7 +47,7 @@ const Listing: React.FC = () => {
       if (searchEmail) queryParams.append("email", searchEmail);
       if (searchMobile) queryParams.append("mobile", searchMobile);
 
-      const res = await fetch(`${API_URL}blogs?${queryParams.toString()}`);
+      const res = await fetch(`${API_URL}news?${queryParams.toString()}`);
       const data: FetchResponse = await res.json();
       console.log("data", data.data)
 
@@ -56,7 +56,7 @@ const Listing: React.FC = () => {
       setTotalPages(data.data.totalPages || 1);
       setTotalEntries(data.data.total || 0);
     } catch (err) {
-      console.error("Error loading blogs:", err);
+      console.error("Error loading news:", err);
       setResults([]);
     } finally {
       setLoading(false);
@@ -82,7 +82,7 @@ const Listing: React.FC = () => {
     if (!isConfirmed) return;
 
     try {
-      const res = await fetch(`${API_URL}blogs/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_URL}news/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete user");
 
       await showSuccess("User has been deleted successfully.");
@@ -112,10 +112,10 @@ const Listing: React.FC = () => {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4 className="fw-semibold">{USER_TITLE}s</h4>
+        <h4 className="fw-semibold">{NEWS_TITLE}s</h4>
         <div>
-          <NavLink to="/blogs/create" className="btn btn-primary btn-sm me-2">
-            <i className="fa-solid fa-plus"></i> Add New {USER_TITLE}
+          <NavLink to="/news/create" className="btn btn-primary btn-sm me-2">
+            <i className="fa-solid fa-plus"></i> Add New {NEWS_TITLE}
           </NavLink>
         </div>
       </div>
@@ -213,7 +213,7 @@ const Listing: React.FC = () => {
                       <td>{formatDMY(result.created_at)}</td>
                       <td className="text-right">
                         <Link
-                          to={`/blogs/edit/${result.blogid}`}
+                          to={`/news/edit/${result.blogid}`}
                           className="text-warning me-3"
                         >
                           Edit
